@@ -103,7 +103,7 @@ namespace MathExam
             }
             else
             {
-                return staticFields.SetedOp;
+                return staticFields.SetOp;
             }
         }
 

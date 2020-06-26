@@ -12,10 +12,11 @@ namespace MathExam
     // Contains Example settings
     public class StaticFields
     {
-        public int SetedOp = 1;
+        public int SetOp = 1;
         public bool GenerateRandomOperator = true;
     }
 
+    
     public class MathExam : Form
     {
         Button b1 = new Button();
@@ -187,28 +188,28 @@ namespace MathExam
 
             OpPlus.Click += (s, e) =>
             {
-                staticFields.SetedOp = 3;
+                staticFields.SetOp = 3;
                 staticFields.GenerateRandomOperator = false;
                 MessageBox.Show(AlertMsg);
             };
 
             OpMinus.Click += (s, e) =>
             {
-                staticFields.SetedOp = 4;
+                staticFields.SetOp = 4;
                 staticFields.GenerateRandomOperator = false;
                 MessageBox.Show(AlertMsg);
             };
 
             OpTimes.Click += (s, e) =>
             {
-                staticFields.SetedOp = 1;
+                staticFields.SetOp = 1;
                 staticFields.GenerateRandomOperator = false;
                 MessageBox.Show(AlertMsg);
             };
 
             OpDivided.Click += (s, e) =>
             {
-                staticFields.SetedOp = 2;
+                staticFields.SetOp = 2;
                 staticFields.GenerateRandomOperator = false;
                 MessageBox.Show(AlertMsg);
             };
