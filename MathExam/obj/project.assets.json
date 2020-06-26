@@ -22,6 +22,7 @@
       "packagesPath": "C:\\Users\\Jaja-new\\.nuget\\packages\\",
       "outputPath": "C:\\CSharpFiles\\MathExam\\MathExam\\obj\\",
       "projectStyle": "PackageReference",
+      "skipContentFileWrite": true,
       "configFilePaths": [
         "C:\\Users\\Jaja-new\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"

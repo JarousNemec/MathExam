@@ -1,6 +1,0 @@
-C:\CSharpFiles\MathExam\MathExam\bin\Debug\MathExam.exe
-C:\CSharpFiles\MathExam\MathExam\bin\Debug\MathExam.pdb
-C:\CSharpFiles\MathExam\MathExam\obj\Debug\MathExam.csprojAssemblyReference.cache
-C:\CSharpFiles\MathExam\MathExam\obj\Debug\MathExam.csproj.CoreCompileInputs.cache
-C:\CSharpFiles\MathExam\MathExam\obj\Debug\MathExam.exe
-C:\CSharpFiles\MathExam\MathExam\obj\Debug\MathExam.pdb

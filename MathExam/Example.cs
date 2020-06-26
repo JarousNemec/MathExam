@@ -13,33 +13,25 @@ namespace MathExam
         public bool IsAnswerCorrect;
         public string msg;
     }
-/*
-    public class StaticFields
-    {
-        public int SetedOp = 1;
-        public bool GenerateRandomOperator = false;
-    }
-*/
+
     public class Example
     {
-        public int op = 1;
+        private int op = 1;
         private int number1;
         private int number2;
         Random r = new Random();
         private StaticFields staticFields;
-        
+
         public Example(StaticFields staticFields)
         {
             this.staticFields = staticFields;
-            
+
             op = GetExamOperator();
 
-            
-            
             CreateNumbersInToExample(op);
         }
 
-        Result ReturnCorrectResult(int op)
+        public Result ReturnCorrectResult(int op)
         {
             Result result = new Result();
             switch (op)
@@ -147,6 +139,21 @@ namespace MathExam
         public int GetSecondNumber()
         {
             return number2;
+        }
+
+        public int ReturnN1()
+        {
+            return number1;
+        }
+
+        public int ReturnN2()
+        {
+            return number2;
+        }
+
+        public int ReturnOp()
+        {
+            return op;
         }
     }
 }
