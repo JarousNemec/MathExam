@@ -19,8 +19,8 @@ namespace MathExam
     
     public class MathExam : Form
     {
-        Button b1 = new Button();
-        Button b2 = new Button();
+        Button actionButton = new Button();
+        Button resetButton = new Button();
         Label l1 = new Label();
         Label l2 = new Label();
         Label l3 = new Label();
@@ -29,8 +29,8 @@ namespace MathExam
         TextBox tb1 = new TextBox();
         TextBox tb2 = new TextBox();
 
-        public static TextBox HistoryViewer = new TextBox();
-        HistoryPreview hp = new HistoryPreview();
+        TextBox HistoryViewer = new TextBox();
+        HistoryPreview hp;
 
         MainMenu MenuBar = new MainMenu();
 
@@ -77,15 +77,15 @@ namespace MathExam
             this.MaximumSize = new Size(600, 650);
             this.StartPosition = FormStartPosition.CenterScreen;
 
-            b1.Size = new Size(100, 60);
-            b1.Location = new Point(250, 50);
-            b1.Text = "Start";
-            b1.Font = new Font("Arial", 24);
+            actionButton.Size = new Size(100, 60);
+            actionButton.Location = new Point(250, 50);
+            actionButton.Text = "Start";
+            actionButton.Font = new Font("Arial", 24);
 
-            b2.Size = new Size(200, 60);
-            b2.Location = new Point(370, 500);
-            b2.Text = "Resetovat";
-            b2.Font = new Font("Arial", 24);
+            resetButton.Size = new Size(200, 60);
+            resetButton.Location = new Point(370, 500);
+            resetButton.Text = "Resetovat";
+            resetButton.Font = new Font("Arial", 24);
 
             l1.Size = new Size(300, 60);
             l1.Location = new Point(10, 300);
@@ -148,18 +148,18 @@ namespace MathExam
 
             Menu = MenuBar;
 
-            this.Controls.Add(b1);
+            this.Controls.Add(actionButton);
             AddComponents();
             SetVissibleExampleComponents(false);
             SetVissibleHistoryViewComponents(false);
-            b1.Visible = true;
+            actionButton.Visible = true;
         }
 
         private void Functions()
         {
-            b1.Click += (s, e) => { b1Control(s, e); };
+            actionButton.Click += (s, e) => { b1Control(s, e); };
 
-            b2.Click += (s, e) =>
+            resetButton.Click += (s, e) =>
             {
                 nCount = 1;
                 RefreshScreen();
@@ -169,20 +169,14 @@ namespace MathExam
             {
                 SetVissibleHistoryViewComponents(false);
                 SetVissibleExampleComponents(true);
-                er = new ExamplesRecorder();
+                VisibleOrInvisibleResidueComponents(example.GetOperator());
             };
 
             History.Click += (s, e) =>
             {
-               /* TextWriter tw = er.ReturnTextWriter();
-                if (!isTextWriterClose)
-                {
-                    tw.Flush();
-                    tw.Close();
-                    isTextWriterClose = true;
-                }*/
                 SetVissibleExampleComponents(false);
                 SetVissibleHistoryViewComponents(true);
+                hp = new HistoryPreview(HistoryViewer);
                 hp.ReadHistoryFile();
             };
 
@@ -223,15 +217,16 @@ namespace MathExam
 
         private void SetVissibleExampleComponents(bool status)
         {
+            actionButton.Visible = status;
+            resetButton.Visible = status;
             l1.Visible = status;
             l2.Visible = status;
             l3.Visible = status;
             l4.Visible = status;
             l5.Visible = status;
-            b1.Visible = status;
-            b2.Visible = status;
             tb1.Visible = status;
             tb2.Visible = status;
+            
         }
 
         private void SetVissibleHistoryViewComponents(bool status)
@@ -243,7 +238,7 @@ namespace MathExam
         {
             if (!isCountingAvailable)
             {
-                b1.Text = "Next";
+                actionButton.Text = "Next";
                 SetVissibleExampleComponents(true);
                 isCountingAvailable = true;
                 nCount++;
@@ -278,7 +273,7 @@ namespace MathExam
 
         private void AddComponents()
         {
-            this.Controls.Add(b2);
+            this.Controls.Add(resetButton);
             this.Controls.Add(tb1);
             this.Controls.Add(tb2);
             this.Controls.Add(l1);
@@ -343,6 +338,11 @@ namespace MathExam
             }
 
             return n;
+        }
+
+        public TextBox GetHistoryViewer()
+        {
+            return HistoryViewer;
         }
     }
 }

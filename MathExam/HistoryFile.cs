@@ -7,13 +7,13 @@ namespace MathExam
     {
         //private static string Name = "hist.txt";
 
-        private static string Filepath;
+        public string Filepath;
         //private static string path = ReturnHistoryFilePath();
-        private FileStream stream;
+        private FileStream streamOUT;
 
         public HistoryFile()
         {
-            stream = File.Open(ReturnHistoryFilePath(), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            streamOUT = new FileStream(ReturnHistoryFilePath(), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
         }
         
         private static string SetHistoryFileName()
@@ -36,9 +36,9 @@ namespace MathExam
             return Filepath;
         }
 
-        public FileStream ReturnFileStream()
+        public FileStream ReturnFileOUTStream()
         {
-            return stream;
+            return streamOUT;
         }
     }
 }

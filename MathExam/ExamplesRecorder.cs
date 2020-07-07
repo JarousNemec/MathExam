@@ -19,7 +19,7 @@ namespace MathExam
 
         private string op = "+";
 
-        ExamplesLogger logger = new ExamplesLogger();
+        private ExamplesLogger logger=new ExamplesLogger();
 
         public void DataCollector(int n1, int n2, int op, bool correctly, int userResult, int userResidue, int nOfExample,Example example)
         {
@@ -64,21 +64,16 @@ namespace MathExam
 
         private void DataWritter()
         {
-            ExamplesLogger.Write("----------------------------------------------------------\n");
-            ExamplesLogger.Write("Příklad č. " + (nOfExample - 1) + "\n");
-            ExamplesLogger.Write("Status: " + correctly + "\n");
-            ExamplesLogger.Write("Příklad: " + n1 + op + n2 + "\n");
-            ExamplesLogger.Write("Správný výsledek: " + trueResult + " zb. " + trueResidue + "\n");
-            ExamplesLogger.Write("Odpověď uživatele: " + userResult + " zb. " + userResidue + "\n");
-            ExamplesLogger.Write("Čas: " + DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second + "\n");
-            ExamplesLogger.Write("Datum: " + DateTime.Now.Day + "." + DateTime.Now.Month + "." + DateTime.Now.Year + "\n");
-            ExamplesLogger.Write("----------------------------------------------------------\n");
+            logger.Write("Příklad č. " + (nOfExample - 1) + "\n");
+            logger.Write("Status: " + correctly + "\n");
+            logger.Write("Příklad: " + n1 + op + n2 + "\n");
+            logger.Write("Správný výsledek: " + trueResult + " zb. " + trueResidue + "\n");
+            logger.Write("Odpověď uživatele: " + userResult + " zb. " + userResidue + "\n");
+            logger.Write("Čas: " + DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second + "\n");
+            logger.Write("Datum: " + DateTime.Now.Day + "." + DateTime.Now.Month + "." + DateTime.Now.Year + "\n");
+            logger.Write("----------------------------------------------------------\n");
         }
 
-        /*public TextWriter ReturnTextWriter()
-        {
-            return tw;
-        }*/
         
     }
 }

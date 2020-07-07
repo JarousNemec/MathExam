@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace MathExam
 {
     public class HistoryPreview
     {
-        private TextBox HistoryViewer;
-
         private FolderBrowserDialog folderBrowserDialog1;
         private OpenFileDialog openFileDialog1;
 
@@ -16,46 +16,33 @@ namespace MathExam
         private string folderName;
         private bool fileOpened;
 
-        public HistoryPreview()
+        private StreamReader reader;
+        private TextBox historyViewer;
+
+        public HistoryPreview(TextBox historyViewer)
         {
             InicializaceFileFinder();
+
+            FileStream streamIN = new FileStream(SelectFilePath(), FileMode.OpenOrCreate, FileAccess.ReadWrite,
+                FileShare.ReadWrite);
+            reader = new StreamReader(streamIN);
+
+            this.historyViewer = historyViewer;
         }
 
         public void ReadHistoryFile()
         {
-            MathExam.HistoryViewer.Clear();
-            string fileName = SelectFilePath();
+            historyViewer.Clear();
+            string readText;
+            StringBuilder sb = new StringBuilder();
+            while ((readText = reader.ReadLine()) != null)
+            {
+                sb.Append(readText);
+                sb.Append(Environment.NewLine);
+            }
 
-/*
-            foreach (var readLine in File.ReadLines(fileName))
-            {
-                MathExam.HistoryViewer.AppendText(readLine + Environment.NewLine);
-                Console.WriteLine(readLine);
-            }
-            */
-            FileStream stream = new HistoryFile().ReturnFileStream();
-            using (stream)
-            {
-                
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    string[] readText = File.ReadAllLines(fileName);
-                    foreach (string s in readText)
-                    {
-                        MathExam.HistoryViewer.AppendText(s + Environment.NewLine);
-                        Console.WriteLine(s);
-                    }
-                }
-            }
-            
-            /*
-              // Open the file to read from.
-            string[] readText = File.ReadAllLines(fileName);
-             foreach (string s in readText)
-            {
-                MathExam.HistoryViewer.AppendText(s + Environment.NewLine);
-                Console.WriteLine(s);
-            }*/
+            historyViewer.Text = sb.ToString();
+
         }
 
         private void InicializaceFileFinder()

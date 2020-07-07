@@ -1,3 +1,4 @@
+using System;
 using System.CodeDom.Compiler;
 using System.IO;
 using System.Net.Mime;
@@ -7,23 +8,17 @@ namespace MathExam
 {
     public class ExamplesLogger
     {
-        //static HistoryFile hf = new HistoryFile();
-
-            
-        //private static StreamWriter tw = File.AppendText(hf.ReturnHistoryFilePath());
-        public bool Isclose;
-        
-        public static void Write(string s)
+        static StreamWriter streamOUT;
+        private HistoryFile hf;
+        public ExamplesLogger()
         {
-          /*  FileStream stream = HistoryFile.ReturnFileStream();
-                
-            using (stream)
-            {
-                using (StreamWriter sw = new StreamWriter(stream))
-                {
-                    sw.Write(s);
-                }
-            }*/
+            hf = new HistoryFile();
+            streamOUT = new StreamWriter(hf.ReturnFileOUTStream());
+        }
+        public void Write(string s)
+        {
+          streamOUT.Write(s);
+          streamOUT.Flush();
         }
 
     }
