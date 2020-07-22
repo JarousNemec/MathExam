@@ -19,7 +19,7 @@ namespace MathExam
             MySqlConnection connection = openConnectionToDB();
             if (connection == null)
             {
-                Console.WriteLine("nic");
+                Console.WriteLine("I can´t connected to Database");
             }
             else
             {
@@ -141,7 +141,7 @@ namespace MathExam
 
             catch (Exception ex)
             {
-                throw ex;
+               Console.WriteLine(ex);
             }
 
             return null;
