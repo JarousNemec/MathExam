@@ -2,10 +2,12 @@ using System;
 using System.CodeDom;
 using System.Drawing;
 using System.IO;
+using System.Net;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 
 namespace MathExam
 {
@@ -49,22 +51,43 @@ namespace MathExam
 
         StaticFields staticFields = new StaticFields();
         ExamplesRecorder er = new ExamplesRecorder();
+        DateTime dt;
+        
+        
+        private MySqlConnection msc;
 
         private Example example;
+        private ConnectToDb connectionToDb;
+        private LoggerToDB loggerToDb;
 
         public int trueR = 0;
         public int falseR = 0;
         public int nCount = 1;
         
-        private const string AlertMsg = "Změny se projevý u dalšího příkladu";
+        private const string ChangeSettingMsg = "Změny se projevý u dalšího příkladu";
 
         private bool isCountingAvailable;
         private bool isTextWriterClose;
+        private bool DBisConnected = true;
 
+        private string user;
+        
         public MathExam()
         {
+            dt = new DateTime();
+            dt = DateTime.Now;
+            connectionToDb = new ConnectToDb();
+            loggerToDb = new LoggerToDB();
             example = new Example(staticFields);
+            
             Inicializace();
+            
+            msc = connectionToDb.Connection(dt);
+            if (msc == null) 
+            {
+                DBisConnected = false;
+            }
+            
             Functions();
         }
 
@@ -184,34 +207,34 @@ namespace MathExam
             {
                 staticFields.SetOp = 3;
                 staticFields.GenerateRandomOperator = false;
-                MessageBox.Show(AlertMsg);
+                MessageBox.Show(ChangeSettingMsg);
             };
 
             OpMinus.Click += (s, e) =>
             {
                 staticFields.SetOp = 4;
                 staticFields.GenerateRandomOperator = false;
-                MessageBox.Show(AlertMsg);
+                MessageBox.Show(ChangeSettingMsg);
             };
 
             OpTimes.Click += (s, e) =>
             {
                 staticFields.SetOp = 1;
                 staticFields.GenerateRandomOperator = false;
-                MessageBox.Show(AlertMsg);
+                MessageBox.Show(ChangeSettingMsg);
             };
 
             OpDivided.Click += (s, e) =>
             {
                 staticFields.SetOp = 2;
                 staticFields.GenerateRandomOperator = false;
-                MessageBox.Show(AlertMsg);
+                MessageBox.Show(ChangeSettingMsg);
             };
 
             OpRandomGenerated.Click += (s, e) =>
             {
                 staticFields.GenerateRandomOperator = true;
-                MessageBox.Show(AlertMsg);
+                MessageBox.Show(ChangeSettingMsg);
             };
         }
 
@@ -261,6 +284,10 @@ namespace MathExam
                 er.DataCollector(example.ReturnN1(), example.ReturnN2(), example.ReturnOp(), eval.IsAnswerCorrect,
                     UserAnswer,
                     UserResidue, nCount,example);
+                if (DBisConnected)
+                {
+                    loggerToDb.DataCollector(msc,dt,nCount,example.ReturnN1(), example.ReturnN2(), example.ReturnOp(), eval.IsAnswerCorrect,UserAnswer,UserResidue);
+                }
                 example = new Example(staticFields);
                 RefreshScreen();
 
