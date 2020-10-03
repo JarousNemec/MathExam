@@ -42,7 +42,6 @@ namespace MathExam
             }
 
             historyViewer.Text = sb.ToString();
-
         }
 
         private void InicializaceFileFinder()

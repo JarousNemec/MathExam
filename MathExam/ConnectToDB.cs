@@ -19,7 +19,7 @@ namespace MathExam
             MySqlConnection connection = openConnectionToDB();
             if (connection == null)
             {
-                Console.WriteLine("I can´t connected to Database");
+                log.Info("I can´t connected to Database");
             }
             else
             {
@@ -60,7 +60,7 @@ namespace MathExam
             }
             catch (Exception e)
             {
-                Console.WriteLine("Force Schema problem > " + e.Message);
+                log.Info("Force Schema problem > " + e.Message);
                 return;
             }
         }
@@ -74,7 +74,7 @@ namespace MathExam
             }
             catch (Exception e)
             {
-                Console.WriteLine("create new schema problem > " + e.Message);
+                log.Info("create new schema problem > " + e.Message);
                 return;
             }
 
@@ -87,7 +87,7 @@ namespace MathExam
             }
             catch (Exception e)
             {
-                Console.WriteLine("create new exampletable problem > " + e.Message);
+                log.Info("create new exampletable problem > " + e.Message);
                 return;
             }
 
@@ -101,7 +101,7 @@ namespace MathExam
             }
             catch (Exception e)
             {
-                Console.WriteLine("create new maininfotable problem > " + e.Message);
+                log.Info("create new maininfotable problem > " + e.Message);
                 return;
             }
         }
@@ -130,18 +130,18 @@ namespace MathExam
 
                 if (connection.State == ConnectionState.Open)
                 {
-                    Console.WriteLine("connected to schema");
+                    log.Info("connected to schema");
                     return connection;
                 }
                 else
                 {
-                    Console.WriteLine("error");
+                    log.Info("error");
                 }
             }
 
             catch (Exception ex)
             {
-               Console.WriteLine(ex);
+                log.Info(ex);
             }
 
             return null;

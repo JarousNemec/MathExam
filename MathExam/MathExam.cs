@@ -1,5 +1,6 @@
 using System;
 using System.CodeDom;
+using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -59,6 +60,7 @@ namespace MathExam
         private Example example;
         private ConnectToDb connectionToDb;
         private LoggerToDB loggerToDb;
+        private WebDbLogger weblogger;
 
         public int trueR = 0;
         public int falseR = 0;
@@ -69,6 +71,7 @@ namespace MathExam
         private bool isCountingAvailable;
         private bool isTextWriterClose;
         private bool DBisConnected = true;
+        private bool LogOnNet = false;
 
         private string user;
         
@@ -76,18 +79,22 @@ namespace MathExam
         {
             dt = new DateTime();
             dt = DateTime.Now;
-            connectionToDb = new ConnectToDb();
-            loggerToDb = new LoggerToDB();
-            example = new Example(staticFields);
             
-            Inicializace();
-            
-            msc = connectionToDb.Connection(dt);
-            if (msc == null) 
+            if (ConfigurationSettings.AppSettings["saveIn"] == "local")
             {
+                connectionToDb = new ConnectToDb();
+                loggerToDb = new LoggerToDB();
+            }
+            else
+            {
+                weblogger = new WebDbLogger();
+                LogOnNet = true;
                 DBisConnected = false;
             }
             
+            example = new Example(staticFields);
+            
+            Inicializace();
             Functions();
         }
 
@@ -287,6 +294,11 @@ namespace MathExam
                 if (DBisConnected)
                 {
                     loggerToDb.DataCollector(msc,dt,nCount,example.ReturnN1(), example.ReturnN2(), example.ReturnOp(), eval.IsAnswerCorrect,UserAnswer,UserResidue);
+                }
+
+                if (LogOnNet)
+                {
+                    weblogger.DataCollector(dt,nCount,example.ReturnN1(), example.ReturnN2(), example.ReturnOp(), eval.IsAnswerCorrect,UserAnswer,UserResidue);
                 }
                 example = new Example(staticFields);
                 RefreshScreen();
