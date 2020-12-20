@@ -101,6 +101,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigTool\ConfigMan.cs" />
     <Compile Include="ConnectToDB.cs" />
     <Compile Include="Example.cs" />
     <Compile Include="ExamplesLogger.cs" />

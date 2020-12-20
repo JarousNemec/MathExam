@@ -4,6 +4,9 @@
     <e p="C:\CSharpFiles\MathExam" t="IncludeFlat">
       <e p="MathExam" t="IncludeRecursive">
         <e p="bin" t="ExcludeRecursive" />
+        <e p="ConfigTool" t="Include">
+          <e p="ConfigMan.cs" t="Include" />
+        </e>
         <e p="ConnectToDB.cs" t="Include" />
         <e p="Example.cs" t="Include" />
         <e p="ExamplesLogger.cs" t="Include" />

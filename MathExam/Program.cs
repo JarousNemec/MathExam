@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using MathExam.ConfigTool;
 
 namespace MathExam
 {

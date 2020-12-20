@@ -11,12 +11,16 @@ namespace MathExam
         private static readonly log4net.ILog log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        private MySqlConnection connection;
         public static string DB_SCHEMA_NAME = "exampleapp";
-        public MySqlConnection Connection(DateTime dt)
+
+        private DateTime dt;
+        
+        public ConnectToDb()
         {
             log.Info("connecting to DB");
 
-            MySqlConnection connection = openConnectionToDB();
+            connection = openConnectionToDB();
             if (connection == null)
             {
                 log.Info("I can´t connected to Database");
@@ -33,9 +37,16 @@ namespace MathExam
                 }
 
                 forceDatabaseName(DB_SCHEMA_NAME, connection);
+                
+                dt = new DateTime();
+                dt = DateTime.Now;
+                
                 LogToSingpost(dt,Dns.GetHostName(),connection);
             }
+        }
 
+        public MySqlConnection ReturnConnection()
+        {
             return connection;
         }
         MySqlCommand cmd;

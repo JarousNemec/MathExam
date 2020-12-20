@@ -8,6 +8,7 @@ using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
+using MathExam.ConfigTool;
 using MySql.Data.MySqlClient;
 
 namespace MathExam
@@ -19,7 +20,7 @@ namespace MathExam
         public bool GenerateRandomOperator = true;
     }
 
-    
+
     public class MathExam : Form
     {
         Button actionButton = new Button();
@@ -42,6 +43,7 @@ namespace MathExam
         MenuItem ExamplesMenu = new MenuItem("Příklady (Mathematicus)");
         MenuItem ShowExamplas = new MenuItem("Zobrazit příklady");
         MenuItem History = new MenuItem("Historie");
+        MenuItem Config = new MenuItem("Config");
 
         MenuItem Operators = new MenuItem("volba příkladů");
         MenuItem OpPlus = new MenuItem("pouze sčítání");
@@ -53,9 +55,9 @@ namespace MathExam
         StaticFields staticFields = new StaticFields();
         ExamplesRecorder er = new ExamplesRecorder();
         DateTime dt;
-        
-        
-        private MySqlConnection msc;
+
+
+        //private MySqlConnection msc;
 
         private Example example;
         private ConnectToDb connectionToDb;
@@ -65,7 +67,7 @@ namespace MathExam
         public int trueR = 0;
         public int falseR = 0;
         public int nCount = 1;
-        
+
         private const string ChangeSettingMsg = "Změny se projevý u dalšího příkladu";
 
         private bool isCountingAvailable;
@@ -74,16 +76,18 @@ namespace MathExam
         private bool LogOnNet = false;
 
         private string user;
-        
+
         public MathExam()
         {
             dt = new DateTime();
             dt = DateTime.Now;
-            
+
             if (ConfigurationSettings.AppSettings["saveIn"] == "local")
             {
+                Console.WriteLine("locaaaaaaaaaaaalujuuuuuuuuuuuuuuu");
                 connectionToDb = new ConnectToDb();
                 loggerToDb = new LoggerToDB();
+                LogOnNet = false;
             }
             else
             {
@@ -91,9 +95,9 @@ namespace MathExam
                 LogOnNet = true;
                 DBisConnected = false;
             }
-            
+
             example = new Example(staticFields);
-            
+
             Inicializace();
             Functions();
         }
@@ -166,6 +170,7 @@ namespace MathExam
 
             menu.MenuItems.Add(ExamplesMenu);
             menu.MenuItems.Add(History);
+            menu.MenuItems.Add(Config);
 
             ExamplesMenu.MenuItems.Add(Operators);
             ExamplesMenu.MenuItems.Add(ShowExamplas);
@@ -187,7 +192,7 @@ namespace MathExam
 
         private void Functions()
         {
-            actionButton.Click += (s, e) => { b1Control(s, e); };
+            actionButton.Click += (s, e) => { B1Control(s, e); };
 
             resetButton.Click += (s, e) =>
             {
@@ -208,6 +213,11 @@ namespace MathExam
                 SetVissibleHistoryViewComponents(true);
                 hp = new HistoryPreview(HistoryViewer);
                 hp.ReadHistoryFile();
+            };
+            Config.Click += (s, e) =>
+            {
+                ConfigMan cm = new ConfigMan();
+                cm.Show();
             };
 
             OpPlus.Click += (s, e) =>
@@ -256,7 +266,6 @@ namespace MathExam
             l5.Visible = status;
             tb1.Visible = status;
             tb2.Visible = status;
-            
         }
 
         private void SetVissibleHistoryViewComponents(bool status)
@@ -264,7 +273,7 @@ namespace MathExam
             HistoryViewer.Visible = status;
         }
 
-        private void b1Control(object sender, EventArgs e)
+        private void B1Control(object sender, EventArgs e)
         {
             if (!isCountingAvailable)
             {
@@ -275,9 +284,13 @@ namespace MathExam
             }
             else
             {
-                int UserAnswer = GetUserResult();
-                int UserResidue = GetUserResidue();
-                ExapmleEvaluation eval = example.CheckUserAnswer(UserAnswer, UserResidue);
+                int userAnswer = GetUserResult();
+                int userResidue = GetUserResidue();
+                if (userAnswer == -1 || userResidue == -1)
+                {
+                    goto skipstep;
+                }
+                ExapmleEvaluation eval = example.CheckUserAnswer(userAnswer, userResidue);
                 if (eval.IsAnswerCorrect)
                 {
                     trueR++;
@@ -289,25 +302,30 @@ namespace MathExam
                 }
 
                 er.DataCollector(example.ReturnN1(), example.ReturnN2(), example.ReturnOp(), eval.IsAnswerCorrect,
-                    UserAnswer,
-                    UserResidue, nCount,example);
+                    userAnswer,
+                    userResidue, nCount, example);
+                
                 if (DBisConnected)
                 {
-                    loggerToDb.DataCollector(msc,dt,nCount,example.ReturnN1(), example.ReturnN2(), example.ReturnOp(), eval.IsAnswerCorrect,UserAnswer,UserResidue);
+                    loggerToDb.DataCollector(connectionToDb.ReturnConnection(), dt, nCount, example.ReturnN1(), example.ReturnN2(),
+                        example.ReturnOp(), eval.IsAnswerCorrect, userAnswer, userResidue);
+                }
+                else if (LogOnNet)
+                {
+                    weblogger.DataCollector(dt, nCount, example.ReturnN1(), example.ReturnN2(), example.ReturnOp(),
+                        eval.IsAnswerCorrect, userAnswer, userResidue);
                 }
 
-                if (LogOnNet)
-                {
-                    weblogger.DataCollector(dt,nCount,example.ReturnN1(), example.ReturnN2(), example.ReturnOp(), eval.IsAnswerCorrect,UserAnswer,UserResidue);
-                }
                 example = new Example(staticFields);
                 RefreshScreen();
 
                 nCount++;
-                Console.WriteLine(UserAnswer);
+                Console.WriteLine(userAnswer);
             }
 
             VisibleOrInvisibleResidueComponents(example.GetOperator());
+            
+            skipstep: ;
         }
 
         private void AddComponents()
@@ -351,7 +369,7 @@ namespace MathExam
 
         private int GetUserResult()
         {
-            int n = 0;
+            int n = -1;
             try
             {
                 n = int.Parse(tb1.Text);
@@ -360,13 +378,12 @@ namespace MathExam
             {
                 MessageBox.Show("Jako vysledek piš pouze čísla");
             }
-
             return n;
         }
 
         private int GetUserResidue()
         {
-            int n = 0;
+            int n = -1;
             try
             {
                 n = int.Parse(tb2.Text);

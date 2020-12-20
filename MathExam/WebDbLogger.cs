@@ -17,16 +17,16 @@ namespace MathExam
             switch (op)
             {
                 case 1:
-                    this.op = "*";
+                    this.op = "times";
                     break;
                 case 2:
-                    this.op = "/";
+                    this.op = "divide";
                     break;
                 case 3:
-                    this.op = "+";
+                    this.op = "plus";
                     break;
                 case 4:
-                    this.op = "-";
+                    this.op = "minus";
                     break;
                 default:
                     this.op = "nothing";
@@ -39,7 +39,7 @@ namespace MathExam
             }
             else
             {
-                user = ConfigurationSettings.AppSettings["saveIn"];
+                user = ConfigurationSettings.AppSettings["user"];
             }
 
             
@@ -47,7 +47,7 @@ namespace MathExam
             
             webClient.QueryString.Add("id", Convert.ToString(dt));
             webClient.QueryString.Add("users", user);
-            webClient.QueryString.Add("order", Convert.ToString(count));
+            webClient.QueryString.Add("order", Convert.ToString(count-1));
             webClient.QueryString.Add("firstn", Convert.ToString(FNumber));
             webClient.QueryString.Add("secondn", Convert.ToString(SNumber));
             webClient.QueryString.Add("op", this.op);
@@ -57,7 +57,7 @@ namespace MathExam
             string result = webClient.DownloadString("http://jarda.cekuj.net/MiddleMan/");
             Console.WriteLine(result);
             
-            //http://jarda.cekuj.net/MiddleMan/MiddleMan.php?id=1&users=jaja&order=1&firstn=10&secondn=3&op=divide&torf=1&answer=10zb1
+            //http://jarda.cekuj.net/MiddleMan/?id=1&users=jaja&order=1&firstn=10&secondn=3&op=divide&torf=1&answer=10zb1
         }
     }
 }
